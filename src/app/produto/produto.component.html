@@ -1,35 +1,48 @@
 <h2>Produtos</h2>
 
-<div *ngIf="produto">
-  <div>
-    <label>name:
-      <input [(ngModel)]="produto.descricao"/>
-    </label>
-  </div>
-  <div>
-    <label>Imagem(url):
-      <input [(ngModel)]="produto.imagemUrl"/>
-    </label>
-  </div>
-  <div>
-    <label>Data de Fabricação:
-      <input [(ngModel)]="produto.dataFabricacao"/>
-    </label>
-  </div>
-  <div>
-    <label>Data de Validade:
-      <input [(ngModel)]="produto.dataValidade"/>
-    </label>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <form [formGroup]="formGroup" (validSubmit)="save()">
+      <div class="form-group">
+        <label class="control-label">Descrição</label>
+        <input type="text" class="form-control" formControlName="descricao">
+      </div>
+      <div class="form-group">
+        <label class="control-label">Imagem(url)</label>
+        <input type="text" class="form-control" formControlName="imagemUrl">
+      </div>
+      <div class="form-group">
+        <label class="control-label">Data Fabricação</label>
+        <input type="text" class="form-control" formControlName="dataFabricacao">
+      </div>
+      <div class="form-group">
+        <label class="control-label">Data Validade</label>
+        <input type="text" class="form-control" formControlName="dataValidade">
+      </div>
+      <button class="btn btn-default" type="button" (click)="onReset()">Novo</button>
+      <button class="btn btn-primary pull-right" type="submit">Salvar</button>
+    </form>
   </div>
 
-  <button (click)="new()">Novo</button>
-  <button (click)="save()">Salvar</button>
+  <div>
+  	<table class="table-responsive">
+  		<thead>
+      <tr>
+        <th>ID</th>
+        <th>Descrição</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let produto of produtos" class="table table-striped">
+    	<tr>
+    		<td><span class="badge">{{produto.id}}</span></td>
+    		<td>{{produto.descricao}}</td>
+    		<td>
+    			<button class="edit" title="edit produto" (click)="onSelect(produto)">editar</button>
+    			<button class="delete" title="delete produto" (click)="delete(produto)">excluir</button>
+    		</td>
+    	</tr>
+    </tbody>
+  	</table>
+  </div>
 </div>
-
-<ul class="produtos">
-  <li *ngFor="let produto of produtos">
-    <span class="badge">{{produto.id}}</span> {{produto.descricao}}
-    <button class="edit" title="edit produto" (click)="onSelect(produto)">editar</button>
-    <button class="delete" title="delete produto" (click)="delete(produto)">excluir</button>
-  </li>
-</ul>

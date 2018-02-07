@@ -14,7 +14,7 @@ const httpOptions = {
 @Injectable()
 export class ProdutoService {
 
-  private produtoUrl = 'http://localhost:8080/produto';
+  private produtoUrl = 'http://localhost:8080/apt-backend-0.1.0/produto';
 
   constructor(private http: HttpClient) { }
 
@@ -25,16 +25,19 @@ export class ProdutoService {
   saveProduto(produto: Produto): Observable<any> {
     this.http.post<Produto>(this.produtoUrl, produto)
       .subscribe(res => console.log(res));
+    return;
   }
 
   updateProduto(produto: Produto): Observable<any> {
     this.http.put<Produto>(this.produtoUrl, produto, httpOptions)
       .subscribe(res => console.log(res));
+    return;
   }
 
   deleteProduto(produtoId: number): Observable<any> {
     const url = `${this.produtoUrl}/${produtoId}`;
     this.http.delete<Produto>(url, httpOptions)
       .subscribe(res => console.log(res));;
+    return;
   }
 }

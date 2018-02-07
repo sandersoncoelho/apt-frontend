@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Produto } from '../domain/produto';
 import { ProdutoService } from '../service/produto.service';
 
@@ -9,7 +10,8 @@ import { ProdutoService } from '../service/produto.service';
 })
 export class ProdutoComponent implements OnInit {
 
-  @Input() produto: Produto = {};
+  formGroup: FormGroup;
+  produtoId: number;
   produtos: Produto[];
 
   constructor(private produtoService: ProdutoService) {
@@ -17,32 +19,47 @@ export class ProdutoComponent implements OnInit {
 
   ngOnInit() {
     this.getProdutos();
+    this.formGroup = new FormGroup({
+      descricao: new FormControl('', [Validators.required]),
+      imagemUrl: new FormControl('', [Validators.required]),
+      dataFabricacao: new FormControl('', [Validators.required]),
+      dataValidade: new FormControl('', [Validators.required])
+    });
   }
 
-  getProdutos(): void {
+  getProdutos() {
     this.produtoService.getProdutos()
     .subscribe(produtos => this.produtos = produtos);
   }
 
-  new(): void {
-    this.produto = {};
+  new() {
+    this.formGroup.reset();
+    this.produtoId = undefined;
   }
 
-  save(): void {
-    if (this.produto.id == undefined) {
-      this.produtoService.saveProduto(this.produto);
+  save() {
+    var produto = this.formGroup.value;
+    produto.id = this.produtoId;
+    
+    if (this.produtoId == undefined) {
+      this.produtoService.saveProduto(produto);
     } else {
-      this.produtoService.updateProduto(this.produto);
+      this.produtoService.updateProduto(produto);
     }
   }
 
-  delete(produto: Produto): void {
-  console.log('asdf: ' + produto.id);
+  delete(produto: Produto) {
     this.produtoService.deleteProduto(produto.id);
   }
 
-  onSelect(selectedProduto: Produto): void {
-    this.produto = selectedProduto;
+  onSelect(selectedProduto: Produto) {
+    this.produtoId = selectedProduto.id;
+    this.formGroup.setValue({
+      descricao: selectedProduto.descricao,
+      imagemUrl: selectedProduto.imagemUrl,
+      dataFabricacao: selectedProduto.dataFabricacao,
+      dataValidade: selectedProduto.dataValidade
+    });
   }
 
 }
